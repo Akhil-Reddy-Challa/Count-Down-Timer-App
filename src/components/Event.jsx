@@ -4,7 +4,7 @@ class Event extends Component {
     return (
       <React.Fragment>
         <td>Event-{this.props.id}</td>
-        <td>HH:MM:SS</td>
+        <td>{this.props.ETA}</td>
         <td>
           <button onClick={this.handleDelete} className="btn btn-danger">
             Delete

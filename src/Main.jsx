@@ -43,7 +43,7 @@ class Main extends Component {
                     onClick={() => this.purgeEvent(event.id)}
                     className="btn btn-danger"
                   >
-                    <i className="fa fa-minus-circle" /> Delete
+                    <i className="fa fa-minus-circle" />
                   </button>
                 </td>
               </tr>
@@ -62,7 +62,11 @@ class Main extends Component {
               placeholder="Event name"
             />
             <label htmlFor="exampleInputEmail1">Pick a Time</label>
-            <input type="date" className="form-control" id="eventTime"></input>
+            <input
+              type="datetime-local"
+              className="form-control"
+              id="eventTime"
+            ></input>
             <button
               onClick={this.handleNewEvent}
               type="submit"
@@ -104,6 +108,9 @@ class Main extends Component {
         ETA: "DD:HH:MM:SS",
       });
       this.setState({ events: allEvents });
+      //Now clear the user-input text from the eventBox
+      eventName.value = "";
+      eventTime.value = "";
       //Now close the EventEntry Box
       this.closeEventBox();
     }
@@ -123,7 +130,6 @@ class Main extends Component {
       let userInputTime = event.eventDate;
 
       userInputTime = new Date(userInputTime); //Convert to Date Object
-      userInputTime.setHours(0, 0, 1); //Set the Time to MidNight
 
       //Fetch the current DateTime
       let currentDateTime = new Date(Date.now());
@@ -135,6 +141,7 @@ class Main extends Component {
         //userInput date should be always a FUTURE date
         //if Difference_In_Time is greater than 0 then user selected past dateTime
         alert("Please select a Future Date");
+        break;
       } else {
         Difference_In_Time = Math.abs(Difference_In_Time); //Converts negative number to positive
         let elapsedSeconds = Math.ceil(Difference_In_Time / 1000); //Only divide with Millisecond
@@ -142,7 +149,7 @@ class Main extends Component {
       }
     }
   };
-  printCountDown = async (seconds, eventId) => {
+  printCountDown = (seconds, eventId) => {
     var daysLeft = Math.floor(seconds / 86400); //get Number of Days divide with (Seconds * Minutes * Hours)
     seconds -= daysLeft * 86400; //As we use FLOOR above, get the leftOver seconds by multiplying with 86400
     var hoursLeft = Math.floor(seconds / 3600); //get Number of Hours divide with (Seconds * Minutes)
@@ -155,21 +162,19 @@ class Main extends Component {
     let etaField = document.getElementById(eventId);
 
     //Time countdown logic
-    while (true) {
-      this.timePrinter(etaField, daysLeft, hoursLeft, minutesLeft, secondsLeft);
-
-      while (secondsLeft > 0) {
-        this.timePrinter(
-          etaField,
-          daysLeft,
-          hoursLeft,
-          minutesLeft,
-          secondsLeft
-        );
-        await this.sleep(1000);
+    var interval = setInterval(function () {
+      //this.timePrinter(etaField, daysLeft, hoursLeft, minutesLeft, secondsLeft);
+      etaField.innerText =
+        daysLeft +
+        " : " +
+        hoursLeft +
+        " : " +
+        minutesLeft +
+        " : " +
+        secondsLeft;
+      if (secondsLeft > 0) {
         secondsLeft--;
-      }
-      if (minutesLeft > 0) {
+      } else if (minutesLeft > 0) {
         minutesLeft--;
         secondsLeft = 59;
       } else if (hoursLeft > 0) {
@@ -181,14 +186,12 @@ class Main extends Component {
         hoursLeft = 23;
         minutesLeft = 59;
         secondsLeft = 59;
-      } else break;
-    }
-  };
-  sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
-  timePrinter = (html, d, h, m, s) => {
-    html.innerText = "".concat(d, " : ", h, " : ", m, " : ", s);
+      } else {
+        //Here we reached end of time
+        clearInterval(interval);
+        etaField.innerText = "Timed-Out";
+      }
+    }, 1000);
   };
   componentDidUpdate() {
     if (this.state.events.length > 0) this.calculateETA();

@@ -12,8 +12,11 @@ class EventBox extends Component {
         >
           <CountDownTimer eventTime={eventDateTime} />
           <div hidden={true} id={"eventName" + id}>
-            <p>{"Name: " + name}</p>
-            <p>{"Event Date: " + eventDateTime}</p>
+            <p>{"Event: " + name}</p>
+            <p>{"Date: " + new Date(eventDateTime).toDateString()}</p>
+            <button onClick={this.props.onDelete} className="btn btn-danger">
+              <i className="fa fa-minus-circle" /> Delete
+            </button>
           </div>
         </div>
       </React.Fragment>

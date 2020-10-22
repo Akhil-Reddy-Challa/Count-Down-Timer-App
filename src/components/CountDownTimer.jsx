@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "../styles/CountDownTimerStyles.css";
 class CountDownTimer extends Component {
   state = {
     days: "XX",
@@ -9,22 +10,25 @@ class CountDownTimer extends Component {
   render() {
     const { days, hours, minutes, seconds } = this.state;
     return (
-      <div className="countdown-wrapper">
-        <div className="countdown-item">
-          {days}
-          <span> days</span>
+      <div className="countDownContainer">
+        <div className="clock-column">
+          <p className="clock-timer">{days}</p>
+          <p className="clock-label">Days</p>
         </div>
-        <div className="countdown-item">
-          {hours}
-          <span> hours</span>
+
+        <div className="clock-column">
+          <p className="clock-timer">{hours}</p>
+          <p className="clock-label">Hours</p>
         </div>
-        <div className="countdown-item">
-          {minutes}
-          <span> minutes</span>
+
+        <div className="clock-column">
+          <p className="clock-timer">{minutes}</p>
+          <p className="clock-label">Minutes</p>
         </div>
-        <div className="countdown-item">
-          {seconds}
-          <span> seconds</span>
+
+        <div className="clock-column">
+          <p className="clock-timer">{seconds}</p>
+          <p className="clock-label">Seconds</p>
         </div>
       </div>
     );

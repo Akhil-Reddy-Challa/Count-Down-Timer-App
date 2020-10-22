@@ -7,9 +7,9 @@ import EventEntryForm from "./components/EventEntryForm";
 class App extends Component {
   state = {
     events: [
-      { id: 1, name: "Event-1(ABC)", eventDateTime: "2020-10-24T17:24" },
-      { id: 2, name: "Event-2(DEF)", eventDateTime: "2020-10-25T13:55" },
-      { id: 3, name: "Event-3(XYZ)", eventDateTime: "2020-10-26T13:55" },
+      { id: 1, name: "Birthday-1", eventDateTime: "2020-10-24T17:24" },
+      { id: 2, name: "Birthday-2", eventDateTime: "2020-10-25T13:55" },
+      { id: 3, name: "Birthday-3", eventDateTime: "2020-10-26T13:55" },
     ],
   };
   render() {
@@ -25,6 +25,7 @@ class App extends Component {
               key={event.id}
               event={event}
               onClick={() => this.expandEventBox(event.id)}
+              onDelete={() => this.purgeEvent(event.id)}
             />
           ))}
         </div>
@@ -68,6 +69,7 @@ class App extends Component {
     }
     let allEvents = this.state.events.slice();
     let length = allEvents.length;
+
     allEvents.push({
       id: length + 1,
       name: eventName.value,
@@ -86,13 +88,20 @@ class App extends Component {
     eventEntryForm.style.display = "none";
   };
   expandEventBox = (eventBoxID) => {
-    var x = document.getElementById("Event" + eventBoxID);
-
-    x.style.height = "300px";
-
-    var y = document.getElementById("eventName" + eventBoxID);
-
-    y.hidden = false;
+    //Here we expand the eventBox to give more context about our event i.e Name,EventTime
+    //Initially eventBox is set at 100px
+    //For expansion, we change it to 300px
+    //By default event name,time are hidden we resurface them when user clicks on Event Box
+    const eventBox = document.getElementById("Event" + eventBoxID);
+    const detailsWrapper = document.getElementById("eventName" + eventBoxID);
+    if (eventBox.offsetHeight === 100) {
+      eventBox.style.height = "300px"; //Increases Height
+      detailsWrapper.hidden = false; //unhides the Event Details
+    } else {
+      //To minimize the EventBox
+      eventBox.style.height = "100px"; //Decreases Height
+      detailsWrapper.hidden = true; //hides the Event Details
+    }
   };
 }
 

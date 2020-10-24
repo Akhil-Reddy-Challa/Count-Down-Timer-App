@@ -5,4 +5,4 @@ Hosting Platform:
 https://app.netlify.com
 
 APP URL: 
-https://condescending-poincare-5d17ea.netlify.app/#
+https://my-countdown-timer.netlify.app

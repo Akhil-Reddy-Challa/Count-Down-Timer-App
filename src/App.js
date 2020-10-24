@@ -3,14 +3,12 @@ import React, { Component } from "react";
 import NavBar from "./components/NavBar";
 import EventBox from "./components/EventBox";
 import EventEntryForm from "./components/EventEntryForm";
+import localforage from "localforage/dist/localforage";
 
 class App extends Component {
   state = {
-    events: [
-      { id: 1, name: "Birthday-1", eventDateTime: "2020-10-24T17:24" },
-      { id: 2, name: "Birthday-2", eventDateTime: "2020-10-25T13:55" },
-      { id: 3, name: "Birthday-3", eventDateTime: "2020-10-26T13:55" },
-    ],
+    events: [],
+    eventCountKeeper: 0,
   };
   render() {
     return (
@@ -42,11 +40,21 @@ class App extends Component {
   };
   purgeEvent = (eventID) => {
     //If @param eventID is empty/undefined then purge all the events
-    if (!eventID) this.setState({ events: [] });
-    else if (window.confirm("Are you sure you want to delete the event")) {
-      let allEvents = this.state.events.slice();
-      allEvents = allEvents.filter((event) => event.id !== eventID); //Filter out the eventID from the EventList
-      this.setState({ events: allEvents });
+
+    let { events, eventCountKeeper } = this.state;
+
+    if (!eventID) {
+      //Delete all from DB
+      localforage.clear();
+      this.setState({ events: [] });
+    } else if (window.confirm("Are you sure you want to delete the event")) {
+      events = events.filter((event) => event.id !== eventID); //Filter out the eventID from the EventList
+      eventCountKeeper--;
+      //Now delete from DB
+      let toDelete = String(eventID); //Convert ID(int) to string, they are stored as strings in DB
+      localforage.removeItem(toDelete).then(() => {
+        this.setState({ events, eventCountKeeper });
+      });
     }
   };
   handleNewEvent = () => {
@@ -67,20 +75,26 @@ class App extends Component {
       alert("Please select a future date");
       return;
     }
-    let allEvents = this.state.events.slice();
-    let length = allEvents.length;
-    let id = length ? allEvents[length - 1].id + 1 : length + 1;
-    allEvents.push({
-      id: id,
+    let { events, eventCountKeeper } = this.state;
+
+    let new_item = {
+      id: eventCountKeeper++,
       name: eventName.value,
       eventDateTime: eventDateTime.value,
-    });
-    this.setState({ events: allEvents });
+    };
+    //Insert into DB
+    localforage.setItem(String(new_item.id), new_item);
+    //Insert into events array
+    events.push(new_item);
+
     //Now clear the user-input text from the eventBox
     eventName.value = "";
     eventDateTime.value = "";
     //Now close the EventEntry Box
     this.closeEventBox();
+
+    console.log("events, eventCountKeeper: ", events, eventCountKeeper);
+    this.setState({ events, eventCountKeeper });
   };
   closeEventBox = () => {
     // Get the eventEntryForm
@@ -103,6 +117,19 @@ class App extends Component {
       detailsWrapper.hidden = true; //hides the Event Details
     }
   };
+  componentDidMount() {
+    //Get complete data from Table if it exists and set the state
+    let events = [];
+    //Fetch and Store all the events from DB
+    localforage
+      .iterate((value, key) => {
+        events.push(value);
+      })
+      .then(() => {
+        //If DB has no entries, insert a dummy event
+        this.setState({ events, eventCountKeeper: events.length + 1 });
+      });
+  }
 }
 
 export default App;

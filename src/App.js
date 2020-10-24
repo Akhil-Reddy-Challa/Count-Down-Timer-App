@@ -43,7 +43,7 @@ class App extends Component {
   purgeEvent = (eventID) => {
     //If @param eventID is empty/undefined then purge all the events
     if (!eventID) this.setState({ events: [] });
-    else {
+    else if (window.confirm("Are you sure you want to delete the event")) {
       let allEvents = this.state.events.slice();
       allEvents = allEvents.filter((event) => event.id !== eventID); //Filter out the eventID from the EventList
       this.setState({ events: allEvents });
@@ -69,9 +69,9 @@ class App extends Component {
     }
     let allEvents = this.state.events.slice();
     let length = allEvents.length;
-
+    let id = length ? allEvents[length - 1].id + 1 : length + 1;
     allEvents.push({
-      id: length + 1,
+      id: id,
       name: eventName.value,
       eventDateTime: eventDateTime.value,
     });

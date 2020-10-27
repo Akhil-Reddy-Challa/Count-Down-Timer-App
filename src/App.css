@@ -1,5 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Piazzolla&family=Teko&display=swap");
+.timerBox {
+  height: 100px;
+  width: 100%;
+  background: #00c6ff;
+  background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+  background: linear-gradient(to right, #0072ff, #00c6ff);
 
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+}
 /* The Modal (background) */
 .eventEntry {
   display: none; /* Hidden by default */
@@ -20,7 +29,7 @@
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  width: 60%;
+  width: 50%;
 }
 
 /* The Close Button */

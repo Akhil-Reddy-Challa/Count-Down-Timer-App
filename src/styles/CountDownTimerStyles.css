@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap");
+* {
+  font-family: "Titillium Web", sans-serif;
+}
+.countDownContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-shadow: none;
+}
+
+.clock-column {
+  margin-right: 2rem;
+  margin-top: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.clock-label {
+  color: #131313;
+  text-align: center;
+  border-top: 1px solid rgba(19, 19, 19, 0.5);
+  /* margin-top: -9px; */
+}
+
+.clock-timer {
+  color: #131313;
+  margin: 0rem !important;
+  font-size: 27px;
+}

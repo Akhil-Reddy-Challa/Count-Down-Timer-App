@@ -1,4 +1,4 @@
-import "./App.css";
+import "./styles/App.css";
 import React, { Component } from "react";
 import NavBar from "./components/NavBar";
 import EventBox from "./components/EventBox";
@@ -93,11 +93,10 @@ class App extends Component {
     //Now close the EventEntry Box
     this.closeEventBox();
 
-    console.log("events, eventCountKeeper: ", events, eventCountKeeper);
     this.setState({ events, eventCountKeeper });
   };
   closeEventBox = () => {
-    // Get the eventEntryForm
+    // Close/hide the eventEntryForm
     var eventEntryForm = document.getElementById("eventEntryBox");
     eventEntryForm.style.display = "none";
   };
@@ -106,9 +105,11 @@ class App extends Component {
     //Initially eventBox is set at 100px
     //For expansion, we change it to 300px
     //By default event name,time are hidden we resurface them when user clicks on Event Box
+    //Function, if a user clicks the eventBox it expands and if the user clicks on it again it minimizes
     const eventBox = document.getElementById("Event" + eventBoxID);
     const detailsWrapper = document.getElementById("eventName" + eventBoxID);
     if (eventBox.offsetHeight === 100) {
+      //To maximize the EventBox
       eventBox.style.height = "300px"; //Increases Height
       detailsWrapper.hidden = false; //unhides the Event Details
     } else {
@@ -118,18 +119,29 @@ class App extends Component {
     }
   };
   componentDidMount() {
-    //Get complete data from Table if it exists and set the state
+    //Get data from our Table
+    /*
+    Sample Data from table =>
+    Key: "1" Value: {id: 1, name: "1st Event", eventDateTime: "2020-10-28T00:08"}
+    EventID is our unique identifier
+    */
     let events = [];
-    //Fetch and Store all the events from DB
-    localforage
+
+    localforage //Fetch all the events from DB
       .iterate((value, key) => {
-        events.push(value);
+        //Perform a check on the eventDateTime
+        if (this.isFutureTime(value.eventDateTime)) events.push(value); //Add only if the eventDateTime is future
       })
       .then(() => {
-        //If DB has no entries, insert a dummy event
         this.setState({ events, eventCountKeeper: events.length + 1 });
       });
   }
+  isFutureTime = (eventTime) => {
+    const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
+    eventTime = new Date(eventTime).getTime(); //Convert event date to milliseconds
+    //If eventTime is greater than currentTime then Event is not yet expired
+    return eventTime > currentTime ? true : false;
+  };
 }
 
 export default App;

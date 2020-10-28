@@ -10,7 +10,7 @@ class EventBox extends Component {
           onClick={this.props.onClick}
           className="timerBox"
         >
-          <CountDownTimer eventTime={eventDateTime} />
+          <CountDownTimer eventTime={eventDateTime} eventID={id} />
           <div hidden={true} id={"eventName" + id}>
             <p>{"Event: " + name}</p>
             <p>{"Date: " + new Date(eventDateTime).toDateString()}</p>

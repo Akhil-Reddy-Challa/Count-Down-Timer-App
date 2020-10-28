@@ -38,15 +38,15 @@ class CountDownTimer extends Component {
     let currentDateTime = new Date(Date.now());
     let Difference_In_Time = Math.floor(
       (userInputTime.getTime() - currentDateTime.getTime()) / 1000
-    );
+    ); //Divide by millisecond
 
-    var daysLeft = Math.floor(Difference_In_Time / 86400);
+    var daysLeft = Math.floor(Difference_In_Time / 86400); //Divide by 60(1 minute),60(1 hour),24(1 day)
     Difference_In_Time -= daysLeft * 86400;
-    var hoursLeft = Math.floor(Difference_In_Time / 3600);
+    var hoursLeft = Math.floor(Difference_In_Time / 3600); //Divide by 60(1 minute),60(1 hour)
     Difference_In_Time -= hoursLeft * 3600;
-    var minutesLeft = Math.floor(Difference_In_Time / 60);
+    var minutesLeft = Math.floor(Difference_In_Time / 60); //Divide by 60(1 minute)
     Difference_In_Time -= minutesLeft * 60;
-    var secondsLeft = Difference_In_Time;
+    var secondsLeft = Difference_In_Time; //We will have few seconds left
 
     this.interval = setInterval(() => {
       const days = daysLeft;

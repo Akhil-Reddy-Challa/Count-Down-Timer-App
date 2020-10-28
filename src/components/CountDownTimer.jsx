@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import "../styles/CountDownTimerStyles.css";
 class CountDownTimer extends Component {
   state = {
-    days: "D",
-    hours: "O",
-    minutes: "N",
-    seconds: "E",
+    days: "XX",
+    hours: "XX",
+    minutes: "XX",
+    seconds: "XX",
   };
   render() {
     const { days, hours, minutes, seconds } = this.state;

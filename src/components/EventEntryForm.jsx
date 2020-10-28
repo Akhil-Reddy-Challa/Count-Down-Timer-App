@@ -2,7 +2,7 @@ import React, { Component } from "react";
 class EventEntryForm extends Component {
   render() {
     return (
-      <div id="eventEntryBox" className="eventEntry">
+      <div id="eventEntryContainer">
         <div className="text-center form-group" id="eventEntryForm">
           <i className="close fa fa-times" onClick={this.props.onClose}></i>
           <label htmlFor="exampleInputEmail1">Give a Name</label>
@@ -18,6 +18,15 @@ class EventEntryForm extends Component {
             className="form-control"
             id="eventDateTime"
           ></input>
+          <label htmlFor="exampleFormControlTextarea1">Notes</label>
+          <textarea
+            className="form-control"
+            id="exampleFormControlTextarea1"
+            rows="3"
+          ></textarea>
+          <small id="emailHelp" className="form-text text-muted">
+            Max limit is 100 chars
+          </small>
           <button
             onClick={this.props.onClick}
             type="submit"
@@ -28,6 +37,10 @@ class EventEntryForm extends Component {
         </div>
       </div>
     );
+  }
+  componentDidMount() {
+    console.log("doc.get", document.getElementById("eventName"));
+    document.getElementById("eventName").focus();
   }
 }
 

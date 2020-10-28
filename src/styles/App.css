@@ -23,7 +23,7 @@
   width: 100%;
 }
 /* The Modal (background) */
-.eventEntry {
+#eventEntryContainer {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -42,7 +42,7 @@
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  width: 50%;
+  /* width: 50%; */
 }
 
 /* The Close Button */

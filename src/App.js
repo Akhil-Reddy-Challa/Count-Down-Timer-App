@@ -35,8 +35,10 @@ class App extends Component {
     );
   }
   createNewEvent = () => {
-    var modal = document.getElementById("eventEntryBox");
+    //Unhide the Event Entry Form
+    var modal = document.getElementById("eventEntryContainer");
     modal.style.display = "block";
+    document.getElementById("eventName").focus();
   };
   purgeEvent = (eventID) => {
     //If @param eventID is empty/undefined then purge all the events
@@ -97,7 +99,7 @@ class App extends Component {
   };
   closeEventBox = () => {
     // Close/hide the eventEntryForm
-    var eventEntryForm = document.getElementById("eventEntryBox");
+    var eventEntryForm = document.getElementById("eventEntryContainer");
     eventEntryForm.style.display = "none";
   };
   expandEventBox = (eventBoxID) => {

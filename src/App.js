@@ -6,10 +6,13 @@ import EventEntryForm from "./components/EventEntryForm";
 import localforage from "localforage/dist/localforage";
 
 class App extends Component {
-  state = {
-    events: [],
-    eventCountKeeper: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      events: this.props.events,
+      eventCountKeeper: this.props.count,
+    };
+  }
   render() {
     return (
       <div className="container-fullwidth">
@@ -120,23 +123,6 @@ class App extends Component {
       detailsWrapper.hidden = true; //hides the Event Details
     }
   };
-  componentDidMount() {
-    //Get data from our Table
-    /*
-    Sample Data from table =>
-    Key: "1" Value: {id: 1, name: "1st Event", eventDateTime: "2020-10-28T00:08"}
-    EventID is our unique identifier
-    */
-    let events = [];
-
-    localforage //Fetch all the events from DB
-      .iterate((value, key) => {
-        events.push(value); //Push to events
-      })
-      .then(() => {
-        this.setState({ events, eventCountKeeper: events.length + 1 });
-      });
-  }
 }
 
 export default App;

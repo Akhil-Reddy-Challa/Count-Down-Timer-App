@@ -129,7 +129,7 @@ class App extends Component {
 
     localforage //Fetch all the events from DB
       .iterate((value, key) => {
-        events.push(value); //Push events
+        events.push(value); //Push to events
       })
       .then(() => {
         this.setState({ events, eventCountKeeper: events.length + 1 });

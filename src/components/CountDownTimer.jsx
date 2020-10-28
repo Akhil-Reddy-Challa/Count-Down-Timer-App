@@ -43,7 +43,6 @@ class CountDownTimer extends Component {
         minutesLeft,
         secondsLeft,
       } = this.calculateTime(eventTime);
-      secondsLeft = 3;
       this.interval = setInterval(() => {
         const days = daysLeft;
         const hours = hoursLeft;

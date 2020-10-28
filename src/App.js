@@ -129,19 +129,12 @@ class App extends Component {
 
     localforage //Fetch all the events from DB
       .iterate((value, key) => {
-        //Perform a check on the eventDateTime
-        if (this.isFutureTime(value.eventDateTime)) events.push(value); //Add only if the eventDateTime is future
+        events.push(value); //Push events
       })
       .then(() => {
         this.setState({ events, eventCountKeeper: events.length + 1 });
       });
   }
-  isFutureTime = (eventTime) => {
-    const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
-    eventTime = new Date(eventTime).getTime(); //Convert event date to milliseconds
-    //If eventTime is greater than currentTime then Event is not yet expired
-    return eventTime > currentTime ? true : false;
-  };
 }
 
 export default App;

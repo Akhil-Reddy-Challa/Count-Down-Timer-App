@@ -34,45 +34,44 @@ class CountDownTimer extends Component {
     );
   }
   componentDidMount() {
-    let userInputTime = new Date(this.props.eventTime);
-    let currentDateTime = new Date(Date.now());
-    let Difference_In_Time = Math.floor(
-      (userInputTime.getTime() - currentDateTime.getTime()) / 1000
-    ); //Divide by millisecond
+    let eventTime = new Date(this.props.eventTime).getTime();
 
-    var daysLeft = Math.floor(Difference_In_Time / 86400); //Divide by 60(1 minute),60(1 hour),24(1 day)
-    Difference_In_Time -= daysLeft * 86400;
-    var hoursLeft = Math.floor(Difference_In_Time / 3600); //Divide by 60(1 minute),60(1 hour)
-    Difference_In_Time -= hoursLeft * 3600;
-    var minutesLeft = Math.floor(Difference_In_Time / 60); //Divide by 60(1 minute)
-    Difference_In_Time -= minutesLeft * 60;
-    var secondsLeft = Difference_In_Time; //We will have few seconds left
-
-    this.interval = setInterval(() => {
-      const days = daysLeft;
-      const hours = hoursLeft;
-      const minutes = minutesLeft;
-      const seconds = secondsLeft;
-      this.setState({ days, hours, minutes, seconds });
-      if (secondsLeft > 0) {
-        secondsLeft--;
-      } else if (minutesLeft > 0) {
-        minutesLeft--;
-        secondsLeft = 59;
-      } else if (hoursLeft > 0) {
-        hoursLeft--;
-        minutesLeft = 59;
-        secondsLeft = 59;
-      } else if (daysLeft > 0) {
-        daysLeft--;
-        hoursLeft = 23;
-        minutesLeft = 59;
-        secondsLeft = 59;
-      } else {
-        clearInterval(this.interval);
-        this.eventComplete(this.props.eventID);
-      }
-    }, 1000);
+    if (this.isFutureTime(eventTime)) {
+      let {
+        daysLeft,
+        hoursLeft,
+        minutesLeft,
+        secondsLeft,
+      } = this.calculateTime(eventTime);
+      secondsLeft = 3;
+      this.interval = setInterval(() => {
+        const days = daysLeft;
+        const hours = hoursLeft;
+        const minutes = minutesLeft;
+        const seconds = secondsLeft;
+        this.setState({ days, hours, minutes, seconds });
+        if (secondsLeft > 0) {
+          secondsLeft--;
+        } else if (minutesLeft > 0) {
+          minutesLeft--;
+          secondsLeft = 59;
+        } else if (hoursLeft > 0) {
+          hoursLeft--;
+          minutesLeft = 59;
+          secondsLeft = 59;
+        } else if (daysLeft > 0) {
+          daysLeft--;
+          hoursLeft = 23;
+          minutesLeft = 59;
+          secondsLeft = 59;
+        } else {
+          clearInterval(this.interval);
+          this.eventComplete(this.props.eventID); //ETA reached
+        }
+      }, 1000);
+    } else {
+      this.eventComplete(this.props.eventID); //ETA reached
+    }
   }
   componentWillUnmount() {
     if (this.interval) {
@@ -85,6 +84,37 @@ class CountDownTimer extends Component {
     document
       .getElementById("Event" + id)
       .setAttribute("class", "timerBoxETAFinish");
+    this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
+  };
+  isFutureTime = (eventTime) => {
+    const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
+    eventTime = new Date(eventTime).getTime(); //Convert event date to milliseconds
+    //If eventTime is greater than currentTime then Event is not yet expired
+    return eventTime > currentTime ? true : false;
+  };
+  calculateTime = (eventTime) => {
+    const currentTime = new Date(Date.now()).getTime(); //Convert currentDateTime to milliseconds
+
+    let Difference_In_Time = eventTime - currentTime;
+
+    Difference_In_Time = Math.floor(Difference_In_Time / 1000); //Divide by 1 Second(1000 milliseconds)
+    let daysLeft = Math.floor(Difference_In_Time / 86400); //Divide by 60 Seconds(1 minute),60 Minutes (1 hour),24 Hours (1 day)
+
+    Difference_In_Time -= daysLeft * 86400;
+    let hoursLeft = Math.floor(Difference_In_Time / 3600); //Divide by 60 Seconds(1 minute),60 Minutes (1 hour)
+
+    Difference_In_Time -= hoursLeft * 3600;
+    let minutesLeft = Math.floor(Difference_In_Time / 60); //Divide by 60 Minutes (1 hour)
+
+    Difference_In_Time -= minutesLeft * 60;
+    let secondsLeft = Difference_In_Time; //We will have few seconds left
+
+    return {
+      daysLeft,
+      hoursLeft,
+      minutesLeft,
+      secondsLeft,
+    };
   };
 }
 

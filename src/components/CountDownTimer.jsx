@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import "../styles/CountDownTimerStyles.css";
 class CountDownTimer extends Component {
   state = {
-    days: "XX",
-    hours: "XX",
-    minutes: "XX",
-    seconds: "XX",
+    days: "D",
+    hours: "O",
+    minutes: "N",
+    seconds: "E",
   };
   render() {
     const { days, hours, minutes, seconds } = this.state;
@@ -70,6 +70,7 @@ class CountDownTimer extends Component {
         secondsLeft = 59;
       } else {
         clearInterval(this.interval);
+        this.eventComplete(this.props.eventID);
       }
     }, 1000);
   }
@@ -78,6 +79,13 @@ class CountDownTimer extends Component {
       clearInterval(this.interval);
     }
   }
+  eventComplete = (id) => {
+    //console.log("Event-" + id + " completed");
+    //Event ETA is complete, so change the timerBox styling
+    document
+      .getElementById("Event" + id)
+      .setAttribute("class", "timerBoxETAFinish");
+  };
 }
 
 export default CountDownTimer;

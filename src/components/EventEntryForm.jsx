@@ -38,10 +38,6 @@ class EventEntryForm extends Component {
       </div>
     );
   }
-  componentDidMount() {
-    console.log("doc.get", document.getElementById("eventName"));
-    document.getElementById("eventName").focus();
-  }
 }
 
 export default EventEntryForm;

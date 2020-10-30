@@ -3,25 +3,22 @@ import React, { Component } from "react";
 import NavBar from "./components/NavBar";
 import EventBox from "./components/EventBox";
 import EventEntryForm from "./components/EventEntryForm";
-import localforage from "localforage/dist/localforage";
+import * as Database from "localforage/dist/localforage";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: this.props.events,
+      allEvents: this.props.allEvents,
       eventCountKeeper: this.props.count,
     };
   }
   render() {
     return (
       <div className="container-fullwidth">
-        <NavBar
-          onClick={this.createNewEvent}
-          onDelete={() => this.purgeEvent()}
-        />
+        <NavBar onClick={this.handleNewEvent} onDelete={this.purgeAllEvents} />
         <div className="container-fullwidth">
-          {this.state.events.map((event) => (
+          {this.state.allEvents.map((event) => (
             <EventBox
               key={event.id}
               event={event}
@@ -31,81 +28,87 @@ class App extends Component {
           ))}
         </div>
         <EventEntryForm
-          onClick={this.handleNewEvent}
-          onClose={this.closeEventBox}
+          onClick={this.createNewEvent}
+          onClose={this.closeEventEntryForm}
         />
       </div>
     );
   }
-  createNewEvent = () => {
+  handleNewEvent = () => {
     //Unhide the Event Entry Form
     var modal = document.getElementById("eventEntryContainer");
     modal.style.display = "block";
-    document.getElementById("eventName").focus();
+    document.getElementById("eventName").focus(); //This will set the focus on the input box
   };
-  purgeEvent = (eventID) => {
-    //If @param eventID is empty/undefined then purge all the events
-
-    let { events, eventCountKeeper } = this.state;
-
-    if (!eventID) {
-      //Delete all from DB
-      localforage.clear();
-      this.setState({ events: [] });
-    } else if (window.confirm("Are you sure you want to delete the event")) {
-      events = events.filter((event) => event.id !== eventID); //Filter out the eventID from the EventList
-      eventCountKeeper--;
-      //Now delete from DB
-      let toDelete = String(eventID); //Convert ID(int) to string, they are stored as strings in DB
-      localforage.removeItem(toDelete).then(() => {
-        this.setState({ events, eventCountKeeper });
-      });
-    }
-  };
-  handleNewEvent = () => {
-    //Start Form validation
+  createNewEvent = () => {
+    //1) Perform Form validation
     let eventName = document.getElementById("eventName");
     let eventDateTime = document.getElementById("eventDateTime");
-    //Check if they are null
+    //1) (a) Check if eventName/Date are blank
     if (!eventName.value || !eventDateTime.value) {
       alert("Event Name or Time missing");
       return;
-    }
-    //At this point user entered all the fields
-    //Check if user entered past Date
+    } //At this point user entered all the fields
+
+    //2) Check if user entered past Date
     let currentTime = new Date(Date.now()).getTime();
     let userInputTime = new Date(eventDateTime.value).getTime();
 
     if (userInputTime <= currentTime) {
       alert("Please select a future date");
       return;
-    }
-    let { events, eventCountKeeper } = this.state;
+    } //Form Validation completed
 
+    //4) Insert Data into DB
+    let { allEvents, eventCountKeeper } = this.state;
+
+    //Create new DB object
     let new_item = {
-      id: eventCountKeeper++,
+      id: ++eventCountKeeper,
       name: eventName.value,
       eventDateTime: eventDateTime.value,
     };
     //Insert into DB
-    localforage.setItem(String(new_item.id), new_item);
+    Database.setItem(String(new_item.id), new_item);
     //Insert into events array
-    events.push(new_item);
+    allEvents.push(new_item);
 
     //Now clear the user-input text from the eventBox
     eventName.value = "";
     eventDateTime.value = "";
     //Now close the EventEntry Box
-    this.closeEventBox();
+    this.closeEventEntryForm();
 
-    this.setState({ events, eventCountKeeper });
+    this.setState({ allEvents, eventCountKeeper });
   };
-  closeEventBox = () => {
+  purgeEvent = (eventID) => {
+    let { allEvents, eventCountKeeper } = this.state;
+    //1) Get confirmation from the user about deletion
+    if (window.confirm("Are you sure you want to delete the event")) {
+      // 2) Filter out the eventID from the EventList
+      allEvents = allEvents.filter((event) => event.id !== eventID);
+      //3) Now delete from DB
+      let toDelete = String(eventID); //Convert ID(int) to string, they are stored as strings in DB
+      Database.removeItem(toDelete).then(() => {
+        // 4) Set the state to reflect the changes
+        this.setState({ allEvents, eventCountKeeper });
+      });
+    }
+  };
+  purgeAllEvents = () => {
+    let { allEvents, eventCountKeeper } = this.state;
+    //Delete all from DB
+    Database.clear();
+    allEvents = [];
+    eventCountKeeper = 0;
+    this.setState({ allEvents, eventCountKeeper }); //Set the state to blank
+  };
+  closeEventEntryForm = () => {
     // Close/hide the eventEntryForm
     var eventEntryForm = document.getElementById("eventEntryContainer");
     eventEntryForm.style.display = "none";
   };
-  expandEventBox = (eventBoxID) => {
+  expandEventEntryForm = (eventBoxID) => {
     //Here we expand the eventBox to give more context about our event i.e Name,EventTime
     //Initially eventBox is set at 100px
     //For expansion, we change it to 300px

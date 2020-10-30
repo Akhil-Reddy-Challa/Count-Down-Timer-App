@@ -34,21 +34,23 @@ class CountDownTimer extends Component {
     );
   }
   componentDidMount() {
+    // 1) Get the eventTime from props and convert to milliseconds
     let eventTime = new Date(this.props.eventTime).getTime();
-
+    //2) Check if it is a future time, else shown it as completed
     if (this.isFutureTime(eventTime)) {
+      // 3) Calculate the time left and store them
       let {
         daysLeft,
         hoursLeft,
         minutesLeft,
         secondsLeft,
-      } = this.calculateTime(eventTime);
+      } = this.calculateTimeLeft(eventTime);
+      // 4) setInterval runs every 1sec
       this.interval = setInterval(() => {
         const days = daysLeft;
         const hours = hoursLeft;
         const minutes = minutesLeft;
         const seconds = secondsLeft;
-        this.setState({ days, hours, minutes, seconds });
         if (secondsLeft > 0) {
           secondsLeft--;
         } else if (minutesLeft > 0) {
@@ -67,6 +69,8 @@ class CountDownTimer extends Component {
           clearInterval(this.interval);
           this.eventComplete(this.props.eventID); //ETA reached
         }
+        // 5) Set the state for every second with updated values
+        this.setState({ days, hours, minutes, seconds });
       }, 1000);
     } else {
       this.eventComplete(this.props.eventID); //ETA reached
@@ -78,7 +82,6 @@ class CountDownTimer extends Component {
     }
   }
   eventComplete = (id) => {
-    //console.log("Event-" + id + " completed");
     //Event ETA is complete, so change the timerBox styling
     document
       .getElementById("Event" + id)
@@ -89,9 +92,9 @@ class CountDownTimer extends Component {
     const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
     eventTime = new Date(eventTime).getTime(); //Convert event date to milliseconds
     //If eventTime is greater than currentTime then Event is not yet expired
-    return eventTime > currentTime ? true : false;
+    return eventTime > currentTime; //Returns true if eventTime is greater than current Time
   };
-  calculateTime = (eventTime) => {
+  calculateTimeLeft = (eventTime) => {
     const currentTime = new Date(Date.now()).getTime(); //Convert currentDateTime to milliseconds
 
     let Difference_In_Time = eventTime - currentTime;

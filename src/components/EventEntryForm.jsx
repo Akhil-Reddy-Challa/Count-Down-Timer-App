@@ -19,11 +19,7 @@ class EventEntryForm extends Component {
             id="eventDateTime"
           ></input>
           <label htmlFor="exampleFormControlTextarea1">Notes</label>
-          <textarea
-            className="form-control"
-            id="exampleFormControlTextarea1"
-            rows="3"
-          ></textarea>
+          <textarea className="form-control" id="userNotes" rows="3"></textarea>
           <small id="emailHelp" className="form-text text-muted">
             Max limit is 100 chars
           </small>

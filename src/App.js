@@ -22,7 +22,7 @@ class App extends Component {
             <EventBox
               key={event.id}
               event={event}
-              onClick={() => this.expandEventBox(event.id)}
+              onClick={() => this.expandEventEntryForm(event.id)}
               onDelete={() => this.purgeEvent(event.id)}
             />
           ))}
@@ -44,7 +44,9 @@ class App extends Component {
     //1) Perform Form validation
     let eventName = document.getElementById("eventName");
     let eventDateTime = document.getElementById("eventDateTime");
-    //1) (a) Check if eventName/Date are blank
+    let userEnteredNotes = document.getElementById("userNotes").value;
+
+    //(a) Check if eventName/Date are blank
     if (!eventName.value || !eventDateTime.value) {
       alert("Event Name or Time missing");
       return;
@@ -67,6 +69,7 @@ class App extends Component {
       id: ++eventCountKeeper,
       name: eventName.value,
       eventDateTime: eventDateTime.value,
+      userNote: userEnteredNotes,
     };
     //Insert into DB
     Database.setItem(String(new_item.id), new_item);

@@ -10,6 +10,7 @@ class EventBox extends Component {
           onClick={this.props.onClick}
           className="timerBox"
         >
+          <div className="eventNameDisplayer">{this.compressText(name)}</div>
           <CountDownTimer eventTime={eventDateTime} eventID={id} />
           <div hidden={true} id={"eventName" + id}>
             <p>{"Event: " + name}</p>
@@ -23,6 +24,12 @@ class EventBox extends Component {
       </React.Fragment>
     );
   }
+  compressText = (eventName) => {
+    //If our eventName is greater than 10 chars, compress it
+    return eventName.length > 10
+      ? eventName.substring(0, 10) + "..."
+      : eventName;
+  };
 }
 
 export default EventBox;

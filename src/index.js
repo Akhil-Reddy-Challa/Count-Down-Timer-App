@@ -31,4 +31,4 @@ Database.iterate((value) => {
   );
 });
 
-serviceWorker.unregister();
+serviceWorker.register();

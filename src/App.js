@@ -44,7 +44,7 @@ class App extends Component {
     //1) Perform Form validation
     let eventName = document.getElementById("eventName");
     let eventDateTime = document.getElementById("eventDateTime");
-    let userEnteredNotes = document.getElementById("userNotes").value;
+    let userEnteredNotes = document.getElementById("userNotes");
 
     //(a) Check if eventName/Date are blank
     if (!eventName.value || !eventDateTime.value) {
@@ -69,7 +69,7 @@ class App extends Component {
       id: ++eventCountKeeper,
       name: eventName.value,
       eventDateTime: eventDateTime.value,
-      userNote: userEnteredNotes,
+      userNote: userEnteredNotes.value,
     };
     //Insert into DB
     Database.setItem(String(new_item.id), new_item);
@@ -79,6 +79,8 @@ class App extends Component {
     //Now clear the user-input text from the eventBox
     eventName.value = "";
     eventDateTime.value = "";
+    userEnteredNotes.value = "";
+
     //Now close the EventEntry Box
     this.closeEventEntryForm();
 

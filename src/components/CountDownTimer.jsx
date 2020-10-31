@@ -86,7 +86,29 @@ class CountDownTimer extends Component {
     document
       .getElementById("Event" + id)
       .setAttribute("class", "timerBoxETAFinish");
-    this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
+    //this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
+
+    console.log("Notification.permission", Notification.permission);
+    console.log(
+      "navigator.serviceWorker.getRegistration()",
+      navigator.serviceWorker.getRegistration()
+    );
+    //Read https://medium.com/better-programming/everything-you-need-to-know-about-pwas-push-notifications-e870bb54e14f
+    //https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
+    if (Notification.permission === "granted") {
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        var options = {
+          body: "Here is a notification body!",
+          icon: "images/example.png",
+          vibrate: [100, 50, 100],
+          data: {
+            dateOfArrival: Date.now(),
+            primaryKey: 1,
+          },
+        };
+        reg.showNotification("Hello world!", options);
+      });
+    }
   };
   isFutureTime = (eventTime) => {
     const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
@@ -111,6 +133,10 @@ class CountDownTimer extends Component {
     Difference_In_Time -= minutesLeft * 60;
     let secondsLeft = Difference_In_Time; //We will have few seconds left
 
+    daysLeft = 0;
+    hoursLeft = 0;
+    minutesLeft = 0;
+    secondsLeft = 2;
     return {
       daysLeft,
       hoursLeft,

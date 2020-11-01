@@ -105,10 +105,6 @@ class CountDownTimer extends Component {
     Difference_In_Time -= minutesLeft * 60;
     let secondsLeft = Difference_In_Time; //We will have few seconds left
 
-    daysLeft = 0;
-    hoursLeft = 0;
-    minutesLeft = 0;
-    secondsLeft = 2;
     return {
       daysLeft,
       hoursLeft,

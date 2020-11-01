@@ -31,7 +31,7 @@ class EventBox extends Component {
   compressText = (eventName) => {
     //If our eventName is greater than 10 chars, compress it
     return eventName.length > 10
-      ? eventName.substring(0, 10) + "..."
+      ? eventName.substring(0, 8) + "..."
       : eventName;
   };
 }

@@ -5,10 +5,10 @@ import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import * as Database from "localforage/dist/localforage";
-import { getNotificationPermissions } from "./notifications";
+import { checkNotificationPermissions } from "./utils/notifications";
 
 //0)Check for Notification Permission
-getNotificationPermissions();
+checkNotificationPermissions();
 //1)  Import all the necessary packages
 let allEvents = [];
 let count = 0;

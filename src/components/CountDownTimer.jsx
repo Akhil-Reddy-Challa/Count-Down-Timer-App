@@ -35,7 +35,8 @@ class CountDownTimer extends Component {
   }
   componentDidMount() {
     // 1) Get the eventTime from props and convert to milliseconds
-    let eventTime = new Date(this.props.eventTime).getTime();
+    let { eventTime, eventName, eventID } = this.props;
+    eventTime = new Date(this.props.eventTime).getTime();
     //2) Check if it is a future time, else shown it as completed
     if (this.isFutureTime(eventTime)) {
       // 3) Calculate the time left and store them
@@ -69,11 +70,11 @@ class CountDownTimer extends Component {
           secondsLeft = 59;
         } else {
           clearInterval(this.interval);
-          this.eventComplete(this.props.eventID, this.props.eventName); //ETA reached
+          this.eventComplete(eventID, eventName); //ETA reached
         }
       }, 1000);
     } else {
-      this.eventComplete(this.props.eventID, this.props.eventName); //ETA reached
+      this.eventComplete(eventID, eventName); //ETA reached
     }
   }
   componentWillUnmount() {
@@ -81,33 +82,6 @@ class CountDownTimer extends Component {
       clearInterval(this.interval);
     }
   }
-  eventComplete = (id, eventName) => {
-    //Event ETA is complete, so change the timerBox styling
-    document
-      .getElementById("Event" + id)
-      .setAttribute("class", "timerBoxETAFinish");
-    this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
-
-    this.triggerNotification(eventName);
-  };
-  triggerNotification = (eventName) => {
-    //Read https://medium.com/better-programming/everything-you-need-to-know-about-pwas-push-notifications-e870bb54e14f
-    //https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
-    if (Notification.permission === "granted") {
-      navigator.serviceWorker.getRegistration().then(function (reg) {
-        var options = {
-          body: "Hey Buddy event has been completed",
-          icon: "images/example.png",
-          vibrate: [100, 50, 100],
-          data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1,
-          },
-        };
-        reg.showNotification(eventName + " Complete", options);
-      });
-    }
-  };
   isFutureTime = (eventTime) => {
     const currentTime = new Date(Date.now()).getTime(); //Get currentDateTime in milliseconds
     eventTime = new Date(eventTime).getTime(); //Convert event date to milliseconds
@@ -141,6 +115,31 @@ class CountDownTimer extends Component {
       minutesLeft,
       secondsLeft,
     };
+  };
+  eventComplete = (id, eventName) => {
+    //Event ETA is complete, so change the timerBox styling
+    document
+      .getElementById("Event" + id)
+      .setAttribute("class", "timerBoxETAFinish");
+    this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
+
+    this.triggerNotification(eventName);
+  };
+  triggerNotification = (eventName) => {
+    if (Notification.permission === "granted") {
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        var options = {
+          body: 'HEY! Your task "' + eventName + '" is now overdue.',
+          image: "images/notificationIcon.png",
+          vibrate: [100, 50, 100],
+          data: {
+            dateOfArrival: Date.now(),
+            primaryKey: 1,
+          },
+        };
+        reg.showNotification(eventName + " Complete", options);
+      });
+    }
   };
 }
 

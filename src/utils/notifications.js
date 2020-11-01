@@ -2,7 +2,7 @@ export function checkNotificationPermissions() {
   const status = Notification.permission;
   if (status === "default") {
     requestPermission();
-  }
+  } else return;
 }
 function requestPermission() {
   try {

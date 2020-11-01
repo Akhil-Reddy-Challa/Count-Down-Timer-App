@@ -11,7 +11,11 @@ class EventBox extends Component {
           className="timerBox"
         >
           <div className="eventNameDisplayer">{this.compressText(name)}</div>
-          <CountDownTimer eventTime={eventDateTime} eventID={id} />
+          <CountDownTimer
+            eventTime={eventDateTime}
+            eventID={id}
+            eventName={name}
+          />
           <div hidden={true} id={"eventName" + id}>
             <p>{"Event: " + name}</p>
             <p>{"Date: " + new Date(eventDateTime).toDateString()}</p>

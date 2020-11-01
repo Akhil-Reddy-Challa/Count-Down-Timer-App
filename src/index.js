@@ -5,14 +5,11 @@ import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import * as Database from "localforage/dist/localforage";
+import { getNotificationPermissions } from "./notifications";
 
+//0)Check for Notification Permission
+getNotificationPermissions();
 //1)  Import all the necessary packages
-
-/*
-  Sample Data inside DB
-  Key: "1" , Value: {id: 1, name: "Event name", eventDateTime: "2020-10-28T00:08"}
-  EventID is an unique identifier
-  */
 let allEvents = [];
 let count = 0;
 //2) Get data from our IndexedDB table

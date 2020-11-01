@@ -51,6 +51,8 @@ class CountDownTimer extends Component {
         const hours = hoursLeft;
         const minutes = minutesLeft;
         const seconds = secondsLeft;
+        // 5) Set the state for every second with updated values
+        this.setState({ days, hours, minutes, seconds });
         if (secondsLeft > 0) {
           secondsLeft--;
         } else if (minutesLeft > 0) {
@@ -67,13 +69,11 @@ class CountDownTimer extends Component {
           secondsLeft = 59;
         } else {
           clearInterval(this.interval);
-          this.eventComplete(this.props.eventID); //ETA reached
+          this.eventComplete(this.props.eventID, this.props.eventName); //ETA reached
         }
-        // 5) Set the state for every second with updated values
-        this.setState({ days, hours, minutes, seconds });
       }, 1000);
     } else {
-      this.eventComplete(this.props.eventID); //ETA reached
+      this.eventComplete(this.props.eventID, this.props.eventName); //ETA reached
     }
   }
   componentWillUnmount() {
@@ -81,24 +81,22 @@ class CountDownTimer extends Component {
       clearInterval(this.interval);
     }
   }
-  eventComplete = (id) => {
+  eventComplete = (id, eventName) => {
     //Event ETA is complete, so change the timerBox styling
     document
       .getElementById("Event" + id)
       .setAttribute("class", "timerBoxETAFinish");
-    //this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
+    this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
 
-    console.log("Notification.permission", Notification.permission);
-    console.log(
-      "navigator.serviceWorker.getRegistration()",
-      navigator.serviceWorker.getRegistration()
-    );
+    this.triggerNotification(eventName);
+  };
+  triggerNotification = (eventName) => {
     //Read https://medium.com/better-programming/everything-you-need-to-know-about-pwas-push-notifications-e870bb54e14f
     //https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
     if (Notification.permission === "granted") {
       navigator.serviceWorker.getRegistration().then(function (reg) {
         var options = {
-          body: "Here is a notification body!",
+          body: "Hey Buddy event has been completed",
           icon: "images/example.png",
           vibrate: [100, 50, 100],
           data: {
@@ -106,7 +104,7 @@ class CountDownTimer extends Component {
             primaryKey: 1,
           },
         };
-        reg.showNotification("Hello world!", options);
+        reg.showNotification(eventName + " Complete", options);
       });
     }
   };

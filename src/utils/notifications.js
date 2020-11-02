@@ -1,6 +1,6 @@
 export function checkNotificationPermissions() {
   //1) Check the device OS
-  //Notifications dont work in iOS devices,browsers
+  //Notifications dont work on iOS devices,browsers
   const deviceOS = getMobileOperatingSystem();
   if (deviceOS[0] !== "i") {
     const status = Notification.permission;

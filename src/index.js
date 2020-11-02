@@ -7,9 +7,11 @@ import "font-awesome/css/font-awesome.css";
 import * as Database from "localforage/dist/localforage";
 import { checkNotificationPermissions } from "./utils/notifications";
 
-//0)Check for Notification Permission
+//0) Import all the necessary packages
+
+//1)Check for Notification Permission
 checkNotificationPermissions();
-//1)  Import all the necessary packages
+
 let allEvents = [];
 let count = 0;
 //2) Get data from our IndexedDB table

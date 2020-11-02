@@ -22,7 +22,7 @@ class App extends Component {
             <EventBox
               key={event.id}
               event={event}
-              onClick={() => this.expandEventEntryForm(event.id)}
+              onClick={() => this.expandEventBox(event.id)}
               onDelete={() => this.purgeEvent(event.id)}
             />
           ))}
@@ -113,8 +113,8 @@ class App extends Component {
     var eventEntryForm = document.getElementById("eventEntryContainer");
     eventEntryForm.style.display = "none";
   };
-  expandEventEntryForm = (eventBoxID) => {
-    //Here we expand the eventBox to give more context about our event i.e Name,EventTime
+  expandEventBox = (eventBoxID) => {
+    //Here we expand the eventBox to give more context about the event i.e Name,EventTime, Notes
     //Initially eventBox is set at 100px
     //For expansion, we change it to 300px
     //By default event name,time are hidden we resurface them when user clicks on Event Box

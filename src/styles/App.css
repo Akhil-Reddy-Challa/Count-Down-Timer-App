@@ -1,6 +1,9 @@
 .timerBox {
   height: 100px;
   width: 100%;
+  border-radius: 10px;
+  animation: popup 0.7s;
+
   background: #00c6ff;
   background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
   background: linear-gradient(to right, #0072ff, #00c6ff);
@@ -9,8 +12,44 @@
   text-align: center;
   font-weight: bold;
 }
+@keyframes popup {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  80% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/*Use the Below to change the eventBox color once the ETA is met*/
+.timerBoxETAFinish {
+  background-image: linear-gradient(
+    110.1deg,
+    rgba(34, 126, 34, 1) 2.9%,
+    rgba(168, 251, 60, 1) 90.3%
+  );
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  height: 100px;
+  width: 100%;
+}
 /* The Modal (background) */
-.eventEntry {
+#eventEntryContainer {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -29,7 +68,7 @@
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
-  width: 50%;
+  /* width: 50%; */
 }
 
 /* The Close Button */

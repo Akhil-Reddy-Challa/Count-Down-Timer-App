@@ -13,7 +13,7 @@
 
 .clock-column {
   margin-right: 2rem;
-  margin-top: 1rem;
+  /* margin-top: 1rem; This is commented out because we are now displaying the eventName on the top*/
   text-align: center;
   position: relative;
 }
@@ -28,5 +28,13 @@
 .clock-timer {
   color: #131313;
   margin: 0rem !important;
-  font-size: 27px;
+  font-size: 25px;
+}
+.eventNameDisplayer {
+  /*To display eventName on the top of eventBox, we use the below styling*/
+  border-bottom: 1px solid rgba(19, 19, 19, 0.5);
+  width: 100px;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
 }

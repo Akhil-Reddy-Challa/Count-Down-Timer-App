@@ -4,10 +4,14 @@
 
 > Notification Triggers allows you to schedule local notifications that don't require a network connection, which makes them ideal for use cases like calendar apps.
 
-This way we can queue our event reminders to OS scheduler.
+This way we can queue our event reminders to the OS scheduler.
 
 Drawbacks:
-This is currently under development stages and might not be a GA.
+
+1. This is currently under development stages and might not be a GA.
+2. Not all browsers support this feature yet
+3. We use an additional parameter(TimestampTrigger) while creating a notification, React would throw an undefined error,
+   so it makes our implementation difficult.
 
 To test this feature you should follow the below steps:
 
@@ -18,4 +22,5 @@ To test this feature you should follow the below steps:
 References:
 
 Notification triggers: https://web.dev/notification-triggers/
-APP URL: https://my-countdown-timer.netlify.app
+
+> This app is not yet deployed because of the lack of browser support and the API being in early beta phases.

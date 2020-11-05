@@ -10,11 +10,14 @@
    
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>CountDown Timer</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <!-- 
+      Below(<meta>) is purely for Notification Triggers API
+      We have generated a key from the BETA program
+      OT Expires Dec 15th, 2020 
+    -->
+    <meta http-equiv="origin-trial" content="AnrpJLkqOtHbEXofkcnQsQ3Wo1Ia2pbzZodpEK/HFOyV5+K+ejo7ANv5RL7amdNN772qDbGRqFsffaLRWegOBgwAAACAeyJvcmlnaW4iOiJodHRwczovL215LWNvdW50ZG93bi10aW1lLTEubmV0bGlmeS5hcHA6NDQzIiwiZmVhdHVyZSI6Ik5vdGlmaWNhdGlvblRyaWdnZXJzIiwiZXhwaXJ5IjoxNjA4MDMwODk1LCJpc1N1YmRvbWFpbiI6dHJ1ZX0=">
     <script>
+      //1) Below sets our service Worker file
       if('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
               navigator.serviceWorker.register('./serviceworker.js')
@@ -23,6 +26,28 @@
                   .catch((err) => console.log('Failure: ', err));
           })
       }
+      //2) Below code is for Notification Triggers API(Beta, only on chrome)
+      //Statement("TimestampTrigger") --> Would throw a undefined error in JS files, hence we did not include it in any of the JS file 
+      function test(eventName,eventTime){   
+          if(Notification.permission === "granted"){
+              navigator.serviceWorker.getRegistration().then(function (reg) {
+              var options = {
+              body: 'HEY! Your task "' + eventName + '" is now overdue.',
+              vibrate: [100, 50, 100],
+              data: {
+                dateOfArrival: Date.now(),
+                primaryKey: 1,
+              },
+              showTrigger: new TimestampTrigger(eventTime),
+              };
+              reg.showNotification(eventName + " Complete", options);    
+          });
+          }
+      }
   </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
   </body>
 </html>

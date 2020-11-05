@@ -119,7 +119,9 @@ class CountDownTimer extends Component {
       .setAttribute("class", "timerBoxETAFinish");
     this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
 
-    this.triggerNotification(eventName);
+    //this.triggerNotification(eventName);
+    //We are now testing Notification Trigggers API, which lets us schedule a future notification
+    //hence we dont require to trigger a notif if the count down is complete
   };
   triggerNotification = (eventName) => {
     if (Notification.permission === "granted") {

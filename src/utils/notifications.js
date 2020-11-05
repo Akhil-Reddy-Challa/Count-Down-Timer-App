@@ -1,4 +1,6 @@
 export function checkNotificationPermissions() {
+  checkIfBrowserSupportsNotificationTriggers();
+
   //1) Check the device OS
   //Notifications dont work on iOS devices,browsers
   const deviceOS = getMobileOperatingSystem();
@@ -8,6 +10,11 @@ export function checkNotificationPermissions() {
     if (status === "default") {
       requestPermission();
     }
+  }
+}
+function checkIfBrowserSupportsNotificationTriggers() {
+  if (!("showTrigger" in Notification.prototype)) {
+    alert("Your browser does not support Notification Triggers");
   }
 }
 function requestPermission() {

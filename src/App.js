@@ -73,6 +73,10 @@ class App extends Component {
     };
     //Insert into DB
     Database.setItem(String(new_item.id), new_item);
+
+    //Schedule a future Notification
+    this.scheduleNotification(eventName, userInputTime);
+
     //Insert into events array
     allEvents.push(new_item);
 
@@ -130,6 +134,12 @@ class App extends Component {
       eventBox.style.height = "100px"; //Decreases Height
       detailsWrapper.hidden = true; //hides the Event Details
     }
+  };
+  scheduleNotification = (name, time) => {
+    //Function(test) is stored in index.html file
+    test(name, time);
+    //Due to some weird JS compilation logic, it only recognizes the method(test) in index.html file
+    //If we try to change the method name, React would throw an error
   };
 }
 

@@ -73,6 +73,7 @@ class App extends Component {
     };
     //Insert into DB
     Database.setItem(String(new_item.id), new_item);
+
     //Insert into events array
     allEvents.push(new_item);
 

@@ -38,44 +38,48 @@ class CountDownTimer extends Component {
     let { eventTime, eventName, eventID } = this.props;
     eventTime = new Date(this.props.eventTime).getTime();
     //2) Check if it is a future time, else shown it as completed
-    if (this.isFutureTime(eventTime)) {
-      // 3) Calculate the time left and store them
-      let {
-        daysLeft,
-        hoursLeft,
-        minutesLeft,
-        secondsLeft,
-      } = this.calculateTimeLeft(eventTime);
-      // 4) setInterval runs every 1sec
-      this.interval = setInterval(() => {
-        const days = daysLeft;
-        const hours = hoursLeft;
-        const minutes = minutesLeft;
-        const seconds = secondsLeft;
-        // 5) Set the state for every second with updated values
-        this.setState({ days, hours, minutes, seconds });
-        if (secondsLeft > 0) {
-          secondsLeft--;
-        } else if (minutesLeft > 0) {
-          minutesLeft--;
-          secondsLeft = 59;
-        } else if (hoursLeft > 0) {
-          hoursLeft--;
-          minutesLeft = 59;
-          secondsLeft = 59;
-        } else if (daysLeft > 0) {
-          daysLeft--;
-          hoursLeft = 23;
-          minutesLeft = 59;
-          secondsLeft = 59;
-        } else {
-          clearInterval(this.interval);
-          this.eventComplete(eventID, eventName); //ETA reached
-        }
-      }, 1000);
-    } else {
-      this.eventComplete(eventID, eventName); //ETA reached
+    if (!this.isFutureTime(eventTime)) {
+      this.eventComplete(
+        eventID,
+        eventName,
+        false /*This stops notification from triggering */
+      ); //ETA reached
+      return;
     }
+    // 3) Calculate the time left and store them
+    let {
+      daysLeft,
+      hoursLeft,
+      minutesLeft,
+      secondsLeft,
+    } = this.calculateTimeLeft(eventTime);
+    // 4) setInterval runs every 1sec
+    this.interval = setInterval(() => {
+      const days = daysLeft;
+      const hours = hoursLeft;
+      const minutes = minutesLeft;
+      const seconds = secondsLeft;
+      // 5) Set the state for every second with updated values
+      this.setState({ days, hours, minutes, seconds });
+      if (secondsLeft > 0) {
+        secondsLeft--;
+      } else if (minutesLeft > 0) {
+        minutesLeft--;
+        secondsLeft = 59;
+      } else if (hoursLeft > 0) {
+        hoursLeft--;
+        minutesLeft = 59;
+        secondsLeft = 59;
+      } else if (daysLeft > 0) {
+        daysLeft--;
+        hoursLeft = 23;
+        minutesLeft = 59;
+        secondsLeft = 59;
+      } else {
+        clearInterval(this.interval);
+        this.eventComplete(eventID, eventName, true); //ETA reached
+      }
+    }, 1000);
   }
   componentWillUnmount() {
     if (this.interval) {
@@ -112,21 +116,24 @@ class CountDownTimer extends Component {
       secondsLeft,
     };
   };
-  eventComplete = (id, eventName) => {
+  eventComplete = (id, eventName, showNotification) => {
+    //@param showNotification decides if we have to trigger notification
+    //When user opens the app and if there are dead events(finsihed ETA), we should not trigger external notification(Bad UX) :)
+
     //Event ETA is complete, so change the timerBox styling
     document
       .getElementById("Event" + id)
       .setAttribute("class", "timerBoxETAFinish");
     this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
-
-    this.triggerNotification(eventName);
+    if (!showNotification) this.triggerNotification(eventName);
   };
   triggerNotification = (eventName) => {
     if (Notification.permission === "granted") {
       navigator.serviceWorker.getRegistration().then(function (reg) {
         var options = {
           body: 'HEY! Your task "' + eventName + '" is now overdue.',
-          image: "images/notificationIcon.png",
+          icon: "/images/notificationIcon.png",
+          badge: "/images/badge.png",
           vibrate: [100, 50, 100],
           data: {
             dateOfArrival: Date.now(),

@@ -125,7 +125,7 @@ class CountDownTimer extends Component {
       .getElementById("Event" + id)
       .setAttribute("class", "timerBoxETAFinish");
     this.setState({ days: "D", hours: "O", minutes: "N", seconds: "E" });
-    if (!showNotification) this.triggerNotification(eventName);
+    if (showNotification) this.triggerNotification(eventName);
   };
   triggerNotification = (eventName) => {
     if (Notification.permission === "granted") {
